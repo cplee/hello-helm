@@ -7,10 +7,10 @@ pipeline {
                 image 'docker'
                 ttyEnabled true
                 command 'cat'
-            }
-            hostPathVolume {
-                mountPath '/var/run/docker.sock'
-                hostPath '/var/run/docker.sock'
+                hostPathVolume {
+                    mountPath '/var/run/docker.sock'
+                    hostPath '/var/run/docker.sock'
+                }
             }
         }
     }
