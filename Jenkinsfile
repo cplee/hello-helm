@@ -4,8 +4,8 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                docker {
-                    build("hello-helm:${env.BUILD_ID}")
+                script {
+                    docker.build("hello-helm:${env.BUILD_ID}")
                 }
             }
         }
