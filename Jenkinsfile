@@ -4,9 +4,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                kubernetes {
-                    buildImage(name: "hello-helm:${env.BUILD_ID}")
-                }
+                buildImage(name: "hello-helm:${env.BUILD_ID}")
             }
         }
         stage('Deploy') {
