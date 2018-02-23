@@ -4,7 +4,9 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                buildImage(name: "hello-helm:${env.BUILD_ID}")
+                docker {
+                    build("hello-helm:${env.BUILD_ID}")
+                }
             }
         }
         stage('Deploy') {
