@@ -7,7 +7,9 @@ podTemplate( label: 'build-pod', cloud: 'kubernetes', idleMinutes: 5,
       checkout scm
 
       container('docker') {
-        sh "docker build -t hello-helm:${env.BUILD_ID} ."
+        def tag = "toolchain-docker-registry/hello-helm:${env.GIT_COMMIT}"
+        sh "docker build -t ${tag} ."
+        sh "docker push ${tag}"
       }
     }
 
