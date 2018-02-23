@@ -19,7 +19,7 @@ pipeline {
         stage('Build') {
             steps {
                 container('docker') {
-                    sh "docker build hello-helm:${env.BUILD_ID} ."
+                    sh "docker build -t hello-helm:${env.BUILD_ID} ."
                 }
             }
         }
