@@ -8,8 +8,10 @@ podTemplate(
   volumes: [hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')]) 
 {
   node('build-pod') {
-    container('docker') {
-      stage('Build') {
+    stage('Build') {
+      checkout scm
+
+      container('docker') {
         sh 'pwd'
         sh 'ls -R' 
         sh 'ls ..' 
