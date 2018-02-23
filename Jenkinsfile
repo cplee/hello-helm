@@ -8,7 +8,9 @@ podTemplate(label: 'build-pod', cloud: 'kubernetes',
 
     stage('Build') {
       container('docker') {
+        sh 'pwd'
         sh 'ls -R' 
+        sh 'ls ..' 
         //sh "docker build -t hello-helm:${env.BUILD_ID} ."
         def img = docker.build("hello-helm:${env.BUILD_ID}")
       }
