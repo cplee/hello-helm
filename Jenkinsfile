@@ -1,4 +1,4 @@
-podTemplate(label: 'build-pod', cloud: 'Kubernetes',
+podTemplate(label: 'build-pod', cloud: 'kubernetes',
   containers: [
     containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true, privileged: true)
   ],
