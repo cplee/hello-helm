@@ -7,9 +7,9 @@ podTemplate( label: 'build-pod', cloud: 'kubernetes', idleMinutes: 5,
       def commitHash = checkout(scm).GIT_COMMIT
 
       container('docker') {
-        def tag = "toolchain-docker-registry:5000/hello-helm:${commitHash}"
+        def tag = "cplee/hello-helm:${commitHash}"
         sh "docker build -t ${tag} ."
-        sh "docker push ${tag}"
+        //sh "docker push ${tag}"
       }
     }
 
