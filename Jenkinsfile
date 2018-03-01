@@ -16,7 +16,7 @@ node {
       try {
         sh "helm get ${helmRelease}"
         sh "helm upgrade ${helmRelease} hello-helm-chart --set ${vals}"
-      } catch (Exception e) {  
+      } catch (Exception e) {
         sh "helm install hello-helm-chart -n ${helmRelease} --set ${vals}"
       }
     }
