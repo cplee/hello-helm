@@ -24,7 +24,7 @@ node {
   }
 
   stage('Test') {
-    container {
+    container('jnlp') {
       sh "curl -s http://hello-helm | grep 'Automation for the People'"
     }
   }
