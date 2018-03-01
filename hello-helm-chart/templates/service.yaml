@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "hello-helm-chart.fullname" . }}
+  name: hello-helm
   labels:
     app: {{ template "hello-helm-chart.name" . }}
     chart: {{ template "hello-helm-chart.chart" . }}
