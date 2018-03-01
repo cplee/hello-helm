@@ -1,16 +1,25 @@
 node {
-  stage('Build') {
-    def commitHash = checkout(scm).GIT_COMMIT
+  def imageRepo = 'cplee/hello-helm'
+  def helmRelease = 'hello-helm'
+  def commitHash = checkout(scm).GIT_COMMIT
 
+  stage('Build') {
     container('docker') {
-      def tag = "cplee/hello-helm:${commitHash}"
+      def tag = "${imageRepo}:${commitHash}"
       sh "docker build -t ${tag} ."
-      //sh "docker push ${tag}"
     }
   }
 
   stage('Deploy') {
-    echo 'deploy...'
+    container('helm') {
+      def vals = "image.tag=${commitHash},image.repository=${imageRepo},service.type=NodePort,service.nodeport=30000"
+      try {
+        sh "helm get ${helmRelease}"
+        sh "helm upgrade ${helmRelease} hello-helm-chart --set ${vals}"
+      } catch (all) {  
+        sh "helm install hello-helm-chart -n ${helmRelease} --set ${vals}"
+      }
+    }
   }
 
 }
