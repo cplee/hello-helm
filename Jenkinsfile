@@ -6,8 +6,13 @@ node {
 
   stage('Build') {
     container('docker') {
-      def tag = "${imageRepo}:${commitHash}"
-      sh "docker build -t ${tag} ."
+      sh "docker build -t ${imageRepo}:${commitHash}"
+    }
+  }
+
+  stage('SAST') {
+    container('clair') {
+      sh "clair-scanner ${imageRepo}:${commitHash}"
     }
   }
 
