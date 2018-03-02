@@ -1,5 +1,5 @@
 node {
-  def imageRepo = 'cplee/hello-helm'
+  def imageRepo = 'toolchain-docker-registry:5000/hello-helm'
   def nodePort = 30000
   def helmRelease = 'hello-helm'
   def commitHash = checkout(scm).GIT_COMMIT
@@ -7,6 +7,7 @@ node {
   stage('Build') {
     container('docker') {
       sh "docker build -t ${imageRepo}:${commitHash} ."
+      sh "docker push ${imageRepo}:${commitHash}"
     }
   }
 
