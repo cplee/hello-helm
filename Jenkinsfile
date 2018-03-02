@@ -6,7 +6,7 @@ node {
 
   stage('Build') {
     container('docker') {
-      sh "docker build -t ${imageRepo}:${commitHash}"
+      sh "docker build -t ${imageRepo}:${commitHash} ."
     }
   }
 
