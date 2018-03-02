@@ -7,7 +7,9 @@ node {
   stage('Build') {
     container('docker') {
       sh "docker build -t ${imageRepo}:${commitHash} ."
-      sh "docker push ${imageRepo}:${commitHash}"
+    }
+    container('skopeo') {
+      sh "skopeo --insecure-policy copy --dest-tls-verify=false docker-daemon:${imageRepo} docker://${imageRepo}"
     }
   }
 
