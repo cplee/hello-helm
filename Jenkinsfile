@@ -9,7 +9,7 @@ node {
       sh "docker build -t ${imageRepo}:${commitHash} ."
     }
     container('skopeo') {
-      sh "skopeo --insecure-policy copy --dest-tls-verify=false docker-daemon:${imageRepo} docker://${imageRepo}"
+      sh "skopeo --insecure-policy copy --dest-tls-verify=false docker-daemon:${imageRepo}:${commitHash} docker://${imageRepo}:${commitHash}"
     }
   }
 
