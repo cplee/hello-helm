@@ -11,8 +11,8 @@ node {
   }
 
   stage('SAST') {
-    container('clair') {
-      sh "clair-scanner ${imageRepo}:${commitHash}"
+    container('reg') {
+      sh "reg vulns --clair http://toolchain-clair:6060 ${imageRepo}:${commitHash}"
     }
   }
 
