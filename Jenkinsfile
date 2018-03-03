@@ -1,32 +1,33 @@
 node {
-  def imageRepo = 'toolchain-docker-registry:5000/hello-helm'
-  def nodePort = 30000
-  def helmRelease = 'hello-helm'
+  def registry = 'toolchain-docker-registry:5000'
+  def clair = 'toolchain-clair:6060'
+  def app = 'hello-helm'
+  def deployNodePort = 30000
   def commitHash = checkout(scm).GIT_COMMIT
 
   stage('Build') {
     container('docker') {
-      sh "docker build -t ${imageRepo}:${commitHash} ."
+      sh "docker build -t ${registry}/${app}:${commitHash} ."
     }
     container('skopeo') {
-      sh "skopeo --insecure-policy copy --dest-tls-verify=false docker-daemon:${imageRepo}:${commitHash} docker://${imageRepo}:${commitHash}"
+      sh "skopeo --insecure-policy copy --dest-tls-verify=false docker-daemon:${registry}/${app}:${commitHash} docker://${registry}/${app}:${commitHash}"
     }
   }
 
   stage('SAST') {
     container('reg') {
-      sh "reg vulns --clair http://toolchain-clair:6060 ${imageRepo}:${commitHash}"
+      sh "reg --insecure --registry https://${registry} vulns --clair http://${clair} ${app}:${commitHash}"
     }
   }
 
   stage('Deploy') {
     container('helm') {
-      def vals = "image.tag=${commitHash},image.repository=${imageRepo},service.type=NodePort,service.nodeport=${nodePort}"
+      def vals = "image.tag=${commitHash},image.repository=${registry}/${app},service.type=NodePort,service.nodeport=${deployNodePort}"
       try {
-        sh "helm get ${helmRelease}"
-        sh "helm upgrade ${helmRelease} hello-helm-chart --set ${vals}"
+        sh "helm get ${app}"
+        sh "helm upgrade ${app} ${app}-chart --set ${vals}"
       } catch (Exception e) {
-        sh "helm install hello-helm-chart -n ${helmRelease} --set ${vals}"
+        sh "helm install ${app}-chart -n ${app} --set ${vals}"
       }
     }
   }
