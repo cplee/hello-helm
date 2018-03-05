@@ -1,0 +1,5 @@
+http:
+  http://hello-helm:
+    status: 200
+    body:
+    - Automation for the People
