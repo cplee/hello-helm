@@ -1,21 +1,22 @@
 node {
-  def registry = 'toolchain-docker-registry:5000'
-  def clair = 'toolchain-clair:6060'
   def app = 'hello-helm'
   def commitHash = checkout(scm).GIT_COMMIT
 
   stage('Build') {
     container('docker') {
-      sh "docker build -t ${registry}/${app}:${commitHash} ."
+      sh "docker build -t ${app}:${commitHash} ."
     }
     container('skopeo') {
-      sh "skopeo --insecure-policy copy --dest-tls-verify=false docker-daemon:${registry}/${app}:${commitHash} docker://${registry}/${app}:${commitHash}"
+      sh "skopeo --insecure-policy copy --dest-tls-verify=false docker-daemon:${app}:${commitHash} docker://toolchain-docker-registry:5000/${app}:${commitHash}"
     }
   }
 
   stage('SAST') {
-    container('reg') {
-      sh "reg --insecure --registry https://${registry} vulns --clair http://${clair} ${app}:${commitHash}"
+    container('klar') {
+      #sh "reg --insecure --registry https://toolchain-docker-registry:5000 vulns --clair http://toolchain-clair:6060 ${app}:${commitHash}"
+      # sh "clair-scanner --ip=toolchain-docker-registry --clair=http://toolchain-clair:6060 ${$app}:${commitHash}"
+      sh "REGISTRY_INSECURE=true CLAIR_ADDR=toolchain-clair /klar toolchain-docker-registry.default.svc.cluster.local:5000/${app}:${commitHash}"
+
     }
   }
 
