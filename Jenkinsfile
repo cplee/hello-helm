@@ -21,7 +21,7 @@ node {
 
   stage('Deploy') {
     container('helm') {
-      def vals = "image.tag=${commitHash},image.repository=localhost:30500/${app}"
+      def vals = "image.tag=${commitHash},image.repository=127.0.0.1:30500/${app}"
       try {
         sh "helm get ${app}"
         sh "helm upgrade ${app} ${app}-chart --set ${vals}"
