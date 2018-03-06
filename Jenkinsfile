@@ -2,7 +2,6 @@ node {
   def registry = 'toolchain-docker-registry:5000'
   def clair = 'toolchain-clair:6060'
   def app = 'hello-helm'
-  def deployNodePort = 30000
   def commitHash = checkout(scm).GIT_COMMIT
 
   stage('Build') {
@@ -22,7 +21,7 @@ node {
 
   stage('Deploy') {
     container('helm') {
-      def vals = "image.tag=${commitHash},image.repository=${registry}/${app},service.type=NodePort,service.nodeport=${deployNodePort}"
+      def vals = "image.tag=${commitHash},image.repository=${registry}/${app}"
       try {
         sh "helm get ${app}"
         sh "helm upgrade ${app} ${app}-chart --set ${vals}"
