@@ -24,9 +24,9 @@ node {
       def vals = "image.tag=${commitHash},image.repository=127.0.0.1:30500/${app}"
       try {
         sh "helm get ${app}"
-        sh "helm upgrade ${app} ${app}-chart --set ${vals}"
+        sh "helm upgrade ${app} ${app}-chart --wait --set ${vals}"
       } catch (Exception e) {
-        sh "helm install ${app}-chart -n ${app} --set ${vals}"
+        sh "helm install ${app}-chart -n ${app} --wait --set ${vals}"
       }
     }
   }
