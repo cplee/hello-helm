@@ -6,6 +6,7 @@ node {
     container('docker') {
       sh "docker build -t ${app}:${commitHash} ."
     }
+
     container('skopeo') {
       sh "skopeo --insecure-policy copy --dest-tls-verify=false docker-daemon:${app}:${commitHash} docker://toolchain-docker-registry:5000/${app}:${commitHash}"
     }
@@ -13,10 +14,7 @@ node {
 
   stage('SAST') {
     container('klar') {
-      //sh "reg --insecure --registry https://toolchain-docker-registry:5000 vulns --clair http://toolchain-clair:6060 ${app}:${commitHash}"
-      // sh "clair-scanner --ip=toolchain-docker-registry --clair=http://toolchain-clair:6060 ${$app}:${commitHash}"
       sh "REGISTRY_INSECURE=true CLAIR_ADDR=toolchain-clair /klar toolchain-docker-registry.default.svc.cluster.local:5000/${app}:${commitHash}"
-
     }
   }
 
