@@ -1,6 +1,13 @@
 # hello-helm
 Sample app deployed with helm.  Built to demonstrate [k8s-toolchain](https://github.com/cplee/k8s-toolchain)
 
+# Local dev
+Use [Skaffold](https://github.com/GoogleContainerTools/skaffold) to perform local dev:
+
+```
+skaffold dev
+```
+
 # Pipeline
 <img src="pipeline.png?raw=true">
 
